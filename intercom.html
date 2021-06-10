@@ -12,12 +12,12 @@ License: MIT
     <script>
         "use strict";
         
-        const DEFAULT_USERNAME = ''
+        const DEFAULT_USERNAME = 'User ' + Math.floor((Math.random() * 999) + 100)
 
         // Messaging server info
-        const PROTO  = 'http'
-        const SERVER = 'localhost'
-        const PORT   = 8080
+        const PROTO  = 'https'
+        const SERVER = 'ic.hohndorf.club'
+        const PORT   = 8081
         const PATH   = '/jsonLoader'
 
         const MESSAGE_TIMEOUT   = 3000
@@ -26,6 +26,7 @@ License: MIT
 
         const DEBUG_LOGGING    = true
     </script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <style>
         :root {
             --wallpaper-dark: #dfa849;
@@ -46,8 +47,6 @@ License: MIT
             --connected-light-off-image: url('assets/connected-light-off.png');
             --connected-light-on-image: url('assets/connected-light-on.png');
             
-            --talk-light-off-image: url('assets/talk-light-off.png');
-            --talk-light-on-image: url('assets/talk-light-on.png');
         }
 
 
@@ -71,8 +70,6 @@ License: MIT
                 var(--connected-light-off-image),
                 var(--connected-light-on-image),
 
-                var(--talk-light-off-image),
-                var(--talk-light-on-image);
         }
 
 
@@ -82,36 +79,12 @@ License: MIT
         }
         
         
-        html {
-            background: repeating-linear-gradient(
-                to right,
-                var(--wallpaper-light),
-                var(--wallpaper-dark) 2px,
-                var(--wallpaper-dark) 108px,
-                var(--wallpaper-light) 110px,
-                var(--wallpaper-light) 150px
-            );
-        }
-        
-        
         [data-type="template"] {
             display: none !important;
         }
         
         
-        #faceplate {
-            display: block;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-image: var(--faceplate-image);
-            background-position: left top;
-            width: 650px;
-            height: 500px;
-            border-radius: 10px;
-            box-shadow: 2px 10px 15px -5px;
-        }
+
         #faceplate::before {
             content: '';
             display: block;
@@ -126,16 +99,7 @@ License: MIT
             border-radius: 10px;
             opacity: 0.1
         }
-        #faceplate::after {
-            content: '';
-            display: block;
-            position: absolute;
-            background-image: var(--faceplate-holes-image);
-            width: 299px;
-            height: 292px;
-            top: 60px;
-            left: 50px
-        }
+
         
         
         #name-input {
@@ -154,10 +118,6 @@ License: MIT
         
             font-weight: bold;
             color: #000c;
-            text-shadow:
-                -1px -1px 3px #fff3,
-                1px 2px 2px #0006,
-                1px 2px 10px #fff6;
         }
         #name-input::placeholder {
             color: #000c;
@@ -175,8 +135,7 @@ License: MIT
             padding: 20px 10px 10px 20px;
             font-size: 16px;
             margin: 10px 0;
-            min-width: 220px;
-            max-width: 270px;
+            width: 100%;
             height: 400px;
             overflow: hidden auto;
             z-index: 1;
@@ -186,7 +145,6 @@ License: MIT
             border-bottom: 0;
             border-radius: 10px 0 10px 0;
             background-color: #0001;
-            box-shadow: inset 10px 20px 30px 0px #000;
         }
         #user-list li:not(:last-child) {
             margin-bottom: 5px;
@@ -270,10 +228,11 @@ License: MIT
             content:'';
             width: 28px;
             height: 50px;
-            background: var(--switch-off-image) center center / 28px 50px no-repeat;
+            background-color:#0064f0;
         }
         #user-list .toggle.on {
-            background-image: var(--switch-on-image);
+            background-color:#00cc66;
+            /*background-image: var(--switch-on-image);*/
         }
         @keyframes toggle-waiting {
             0%  { background-image: var(--switch-center-on-image); }
@@ -283,7 +242,8 @@ License: MIT
         }
         #user-list .toggle.waiting {
             /* animation: toggle-waiting 1s infinite; */
-            background-image: var(--switch-center-on-image)
+            background-color:#f7f78c;
+            /*background-image: var(--switch-center-on-image)*/
         }
         
         
@@ -301,41 +261,23 @@ License: MIT
             position: absolute;
             top: 15px;
             right: 25px;
-            width: 20px;
-            height: 20px;
-            border-radius: 20px;
+            width: 60px;
+            height: 45px;
             border: 1px solid #555;
-            background-color: #222;
-            box-shadow:
-                inset 2px 6px 3px -3px #fff,
-                inset -2px -2px 3px -3px #fff;
+            background-color: #e7bd74;
+            text-align:center;
+            font-size:20px;
+            cursor:pointer;
+            font-weight:bold;
+            display:flex;
+            align-items: center;
+            justify-content: center;
         }
         #user-list .button.highlight {
-            background-color: #0c6;
+            background-color: #00cc66;
         }
         #user-list .button.pressed {
-            border: 1px solid #444;
-            box-shadow:
-                inset 1px 2px 2px 2px #000,
-                inset 1px 3px 3px 1px #fff;
-        }
-        #user-list .button::before {
-            display: inline-block;
-            position: relative;
-            content: "talk";
-            color: #222;
-            font-size: 10px;
-            line-height: 24px;
-            height: 24px;
-            top: -3px;
-            left: -3px;
-            border: 1px solid #ccc3;
-            border-right: 0px;
-            border-radius: 20px 0 0 20px;
-            background-color: #f7f7f730;
-            box-shadow: inset 18px 8px 10px -2px #000a;
-            padding: 0 5px 0 26px;
-            z-index: -1;
+            background-color: #00cc66;
         }
 
 
@@ -411,35 +353,22 @@ License: MIT
 
 
         #talk-light {
-            display: block;
             position: absolute;
             bottom: 5px;
             left: 7px;
-            width: 91px;
-            height: 91px;
-            background: var(--talk-light-off-image) top left / 91px 91px no-repeat;
+            width: 200px;
+            height: 200px;
+            background-color:#0064f0;
+            color:white;
+            font-weight:bold;
+            display:flex;
+            align-items: center;
+            justify-content: center;
+            font-size:24px;
         }
-        #talk-light:hover::before {
-            display: block;
-            position: absolute;
-            white-space: nowrap;
-            content: "press and hold to broadcast";
-            color: #fff;
-            font-size: 10px;
-            line-height: 10px;
-            top: -2px;
-            left: 50%;
-            transform: translateX(-50%);
-            height: 10px;
-            border: 1px solid #fff;
-            background-color: #222;
-            padding: 2px;
-        }
+
         #talk-light.on {
-            background-image: var(--talk-light-on-image)
-        }
-        #talk-light.on:hover::before {
-            display: none;
+            background-color:#00cc66;
         }
 
 
@@ -480,15 +409,15 @@ License: MIT
                 <span class="toggle"></span>
                 <span class="light"></span>
                 <span class="name">UserName</span>
-                <span class="button"></span>
+                <span class="button">TALK</span>
             </li>
         </ul>
         <span id="connected-light"></span>
-        <span id="talk-light"></span>
+        <span id="talk-light">Talk</span>
     </div>
     <div id="copyright">
         WebRTC Intercom / Fork on <a href="https://github.com/codewithmichael/webrtc-intercom">GitHub</a><br/>
-        MIT License - Copyright © 2020 Michael Spencer<br/>
+        MIT License - Copyright © 2020 Michael Spencer / Modified by Stefan Warnat<br/>
     </div>
 
 
@@ -1174,8 +1103,10 @@ License: MIT
             talkLight.flash             = function() { this.classList.add('flashing'); this.classList.remove('on') }
             talkLight.cancelFlash       = function() { this.classList.remove('flashing') }
             talkLight.isPressed         = function() { return this.classList.contains('pressed') }
+            talkLight.touchstart       = function() { this.classList.add('pressed'); if (this.onpress) this.onpress() }
             talkLight.onmousedown       = function() { this.classList.add('pressed'); if (this.onpress) this.onpress() }
             talkLight.onmouseup         =
+            talkLight.touchend         =
             talkLight.onmouseout        = function() { this.classList.remove('pressed'); if (this.onrelease) this.onrelease() }
             talkLight.onpress           = undefined
             talkLight.onrelease         = undefined
@@ -1256,7 +1187,8 @@ License: MIT
             light.cancelFlash  = function() { this.classList.remove('flashing') }
 
             Object.assign(userItem, { audio, name, button, toggle, light })
-            
+            toggle.enable();
+
             return userItem
         }
 
@@ -1507,4 +1439,5 @@ License: MIT
     })()</script>
 
 </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 </html>
